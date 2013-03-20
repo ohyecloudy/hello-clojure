@@ -16,12 +16,12 @@
 
 (is
   (= 0 (+))
-  "전위 표기볍(prefix notation)이 가진 잇점
+  "전위 표기법(prefix notation)이 가진 잇점
   - 인자가 없는 경우도 처리. 경계 조건 처리가 수월")
 
 (is 
   (= 22/7 (/ 22 7))
-  "ration 타입을 가지고 있다")
+  "ratio 타입을 가지고 있다")
 
 (is 
   (= clojure.lang.Ratio 
