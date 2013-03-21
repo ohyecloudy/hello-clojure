@@ -15,8 +15,14 @@
   (= (quote (1 2)) '(1 2))
   "'은 표현식 값을 평가하지 않는 quote 함수로 만드는 리더 매크로")
 
+(use '[clojure.string :only (split)])
+(is 
+  (= 
+    ["fine" "day"] 
+    (filter #(> (count %) 2) (split "A fine day" #"\W+")))
+  "fn이 아닌 #로 익명함수를 정의할 수 있다. 인자가 하나일 경우 %로 접근가능")
+
 ; TODO
-; 익명 함수 - #(.toUpperCase %)
 ; deref - @form => (deref form)
 ; meta - ^form => (meta form)
 ; 메타데이터 - #^metadata form
