@@ -105,3 +105,55 @@
      (if 0 "zero is true" "zero is false"))
   "0은 true로 평가된다, false와 nil을 제외하고는 다 true로 평가된다")
 
+(is (= true (true? true)))
+(is 
+  (= false (true? "foo")) 
+  "true로 평가되는지 판별하는 게 아니라 true인지 판별")
+
+(is (= true (zero? 0)))
+(is (= false (zero? (/ 22 7))))
+
+;-------------------------------------------------------------------------------
+; map, keyword, struct
+
+; 클로저는 쉼표를 공백으로 인식한다. 
+(def inventors {"Lisp" "McCarthy", "Clojure" "Hickey"})
+
+(is (= "McCarthy" (inventors "Lisp"))
+    "map은 그 자체가 곧 함수. 키를 인자로 넘기면 값을 리턴")
+(is (= nil (inventors "foo"))
+    "없는 키면 nil을 리턴")
+
+(is (= "McCarthy" (get inventors "Lisp" "I dunno!")))
+(is (= "I dunno!" (get inventors "foo" "I dunno!"))
+    "get을 사용하면 키를 못 찾을 때, 리턴 값을 지정할 수 있다.")
+
+(is (= :foo :foo)
+    "키워드 평가값은 키워드. 
+    * 심벌은 다른 무언가를 가리키기 위해 사용.")
+
+(def inventors-keyword {:Lisp "McCarthy" :Clojure "Hickey"})
+
+(is (= "Hickey" (inventors-keyword :Clojure)))
+(is (= "Hickey" (:Clojure inventors-keyword))
+    "키워드 역시 함수. 맵을 인자로 받아 키워드를 키로 하는 값을 리턴")
+
+(defstruct book :title :author)
+(def b (struct book "Anathem" "Neal Stephenson"))
+(is 
+  (= 
+    {:title "Anathem" :author "Neal Stephenson"} 
+    b)
+  "구조체 인스턴스는 맵과 거의 똑같이 동작한다")
+; TODO 왜 똑같다고 안 하고 거의 똑같다고 하는가?
+(is (= "Anathem" (:title b)))
+
+(def 
+  struct-map-inst 
+  "구조체 속성은 있는 것으로 기대되는 값. 꼭 필요한 값은 아니다.
+  struct-map을 사용하면 속성 값 가운데 일부를 빠뜨릴 수도 있고
+  속성에 없는 키/값을 추가할 수도 있다"
+  (struct-map book :copyright 2008 :title "Anathem"))
+(is (= 2008 (:copyright struct-map-inst)))
+(is (= 2008 (struct-map-inst :copyright)))
+
