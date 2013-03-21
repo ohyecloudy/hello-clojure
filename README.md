@@ -6,6 +6,7 @@ clojure 학습 프로젝트
 
 * [forms](test/forms-test.clj)
 * [reader macros](test/reader-macros-test.clj)
+* [functions](test/functions-test.clj)
 
 ## reference
 
