@@ -56,3 +56,38 @@
      [5 4 3 2 1]
      (vec (reverse (rest (range 6))))))
 
+;-------------------------------------------------------------------------------
+; for loop
+; clojure에는 for loop가 없다. 
+; for loop 처럼 동작하려면 다르게 생각하고 구현해야 한다.
+; indexOfAny() 자바버전과 똑같이 동작하는 함수를 clojure로 만든다.
+
+(defn indexed 
+  "map은 로 f를 c1, c2 첫번째 아이템에 적용한다.
+  vector는 e1 e2로 vector를 만든다"
+  [coll] (map vector (iterate inc 0) coll))
+(is (=
+     [[0 \a] [1 \b] [2 \c] [3 \d] [4 \e]]
+     (indexed "abcde")))
+
+(defn index-filter 
+  "for는 루프가 아니라 리스트 해석(list comprehension)을 위해 사용
+  (indexed coll)리턴 값 중에서 (pred elt)가 참일 때만 각각 idx와 elt에 바인딩"
+  [pred coll]
+  (when pred
+    (for [[idx elt] (indexed coll) :when (pred elt)] idx)))
+(is (=
+     [0 1 4 5 6]
+     (index-filter #{\a \b} "abcdbbb"))
+    "집합 그 자체가 원소의 포함 여부를 테스트할 수 있는 함수.
+    그래서 #{\\a \\b} 집합을 predicate로 사용할 수 있다.")
+(is (=
+     []
+     (index-filter #{\a \b} "xyz")))
+
+(defn index-of-any [pred coll]
+  (first (index-filter pred coll)))
+(is (=
+     0
+     (index-of-any #{\a \b} "abcdbbb")))
+
