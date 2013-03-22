@@ -22,6 +22,10 @@
     (filter #(> (count %) 2) (split "A fine day" #"\W+")))
   "fn이 아닌 #로 익명함수를 정의할 수 있다. 인자가 하나일 경우 %로 접근가능")
 
+(def foo 10)
+(is (= #'foo (var foo))
+    "#' 리더 매크로 - var를 리턴")
+
 ; TODO
 ; deref - @form => (deref form)
 ; meta - ^form => (meta form)
@@ -30,5 +34,4 @@
 ; 구문 따옴표 - `x
 ; 평가 기호 - ~
 ; 이음 평가 기호 - ~@
-; var-quote - #'x => (var x)
 

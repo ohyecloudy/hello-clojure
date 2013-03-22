@@ -7,6 +7,7 @@ clojure 학습 프로젝트
 * [forms](test/forms-test.clj)
 * [reader macros](test/reader-macros-test.clj)
 * [functions](test/functions-test.clj)
+* [vars, bindings, namespaces](test/vars-bindings-namespaces-test.clj)
 
 ## reference
 
