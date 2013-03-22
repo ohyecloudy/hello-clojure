@@ -8,6 +8,7 @@ clojure 학습 프로젝트
 * [reader macros](test/reader-macros-test.clj)
 * [functions](test/functions-test.clj)
 * [vars, bindings, namespaces](test/vars-bindings-namespaces-test.clj)
+* [flow control](test/flow-control-test.clj)
 
 ## reference
 
