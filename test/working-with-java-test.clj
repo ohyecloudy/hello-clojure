@@ -83,3 +83,70 @@
                 (max ret (.length (aget strings idx)))))
     "areduce로 종합하는 함수를 만들 수 있다.")
 
+(is (= ["A" "B"]
+       (map (memfn toUpperCase) ["a" "b"]))
+    "toUpperCase는 자바 메서드여서 클로저 함수처럼 인자로 못 넘긴다.
+    대신 memfn 매크로를 사용하면 가능")
+
+(is (= ["A" "B"]
+       (map #(.toUpperCase %) ["a" "b"]))
+    "익명 함수로도 가능. 이 방식을 선호한다고 한다.")
+
+; TODO: 책과 다르다. Integer가 아니라 Long
+(is (= true (instance? Long 10)) "어떤 클래스의 인스턴스인지 검사")
+(is (= true (instance? Comparable 10)))
+(is (= false (instance? String 10)))
+
+(is (= "name:A, age:18"
+       (format "name:%s, age:%d" "A" 18))
+    "자바 Formatter 클래스 래퍼")
+
+; reflection warning 표시
+; Class 메타 데이터를 추가해서 타입 힌트를 준다.
+; [^Class c] 대신 [c]만 사용하면 c 타입을 알지 못해 경고가 발생한다.
+; 경고가 나오지만 타입 유추에 성공해서 제대로 호출된다.
+(set! *warn-on-reflection* true)
+(defn describe-class [^Class c]
+  {:name (.getName c)
+   :final (java.lang.reflect.Modifier/isFinal (.getModifiers c))})
+
+(is (= "java.lang.StringBuffer"
+       (:name (describe-class StringBuffer))))
+(set! *warn-on-reflection* false)
+
+; 새로운 스레드로 실행될 Runnable의 동적 서브클래스를 생성
+(.start (Thread. (proxy [Runnable] [] (run [] (println "I ran!")))))
+
+; 클로저 함수는 Runnable, Callable 인터페이스를 자동으로 구현한다
+(#(println "foo"))
+(.run #(println "foo"))
+(.call #(println "foo"))
+
+(defn class-available? [class-name]
+  (try
+    (Class/forName class-name) true
+    (catch ClassNotFoundException _ false)))
+(is (= true (class-available? "java.lang.String")))
+(is (= false (class-available? "blahblah")))
+
+;-------------------------------------------------------------------------------
+; java proxy
+
+(import '(org.xml.sax InputSource)
+        '(org.xml.sax.helpers DefaultHandler)
+        '(java.io StringReader)
+        '(javax.xml.parsers SAXParserFactory))
+
+(def print-element-handler
+  "proxy 함수를 사용해 java 클래스 확장이 가능하다."
+  (proxy [DefaultHandler] []
+    (startElement [uri local qname atts]
+      (println (format "Saw element: %s" qname)))))
+
+(defn demo-sax-parse [source handler]
+  (.. SAXParserFactory newInstance newSAXParser
+      (parse (InputSource. (StringReader. source))
+             handler)))
+
+(demo-sax-parse "<foo><bar>Body of bar</bar></foo>" print-element-handler)
+

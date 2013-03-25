@@ -10,6 +10,7 @@ clojure 학습 프로젝트
 * [vars, bindings, namespaces](test/vars-bindings-namespaces-test.clj)
 * [flow control](test/flow-control-test.clj)
 * [metadata](test/metadata-test.clj)
+* [working with java](test/working-with-java-test.clj)
 
 ## reference
 
