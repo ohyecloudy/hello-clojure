@@ -3,6 +3,8 @@
 ; ** http://goo.gl/jmhrP
 ; * clojure.test - ClojureDocs
 ; ** http://clojuredocs.org/clojure_core/clojure.test
+; * the reader - clojure
+; ** http://clojure.org/reader
 
 (ns hello-clojure.reader-macros-test
   (:use clojure.test))
@@ -26,10 +28,13 @@
 (is (= #'foo (var foo))
     "#' 리더 매크로 - var를 리턴")
 
+(defn ^{:tag String} shout [^{:tag String} s] (.toUpperCase s))
+(is (= java.lang.String
+       (:tag (meta #'shout)))
+    "리더 매크로 ^를 사용해 var에 키/값 쌍을 추가로 더했다.")
+
 ; TODO
 ; deref - @form => (deref form)
-; meta - ^form => (meta form)
-; 메타데이터 - #^metadata form
 ; 정규식 패턴 - #"foo" => java.util.regex.Pattern
 ; 구문 따옴표 - `x
 ; 평가 기호 - ~
