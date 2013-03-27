@@ -33,9 +33,11 @@
        (:tag (meta #'shout)))
     "리더 매크로 ^를 사용해 var에 키/값 쌍을 추가로 더했다.")
 
+(is (= '("a" "bcd" "efg") (re-seq #"\w+" "a bcd efg"))
+    "#\"\" - 리더 매크로는 정규식을 만든다.")
+
 ; TODO
 ; deref - @form => (deref form)
-; 정규식 패턴 - #"foo" => java.util.regex.Pattern
 ; 구문 따옴표 - `x
 ; 평가 기호 - ~
 ; 이음 평가 기호 - ~@
