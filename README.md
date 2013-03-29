@@ -11,6 +11,7 @@ clojure 학습 프로젝트
 * [flow control](test/flow-control-test.clj)
 * [metadata](test/metadata-test.clj)
 * [working with java](test/working-with-java-test.clj)
+* [sequences](test/sequences-test.clj)
 
 ## reference
 

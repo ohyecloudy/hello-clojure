@@ -236,3 +236,156 @@
 ; (with-open [rdr (clojure.java.io/reader "build.xml")]
 ;   (count (line-seq rdr)))
 
+(def 
+  xml-text 
+  "<compositions>
+    <composition composer='J. S. Bach'>
+      <name>The Art of the Fugue</name>
+    </composition>
+    <composition composer='J. S. Bach'>
+      <name>Musical Offering</name>
+    </composition>
+    <composition composer='W. A. Mozart'>
+      <name>Requiem</name>
+    </composition>
+  </compositions>")
+; TODO: XML
+
+;-------------------------------------------------------------------------------
+; list function
+
+(is (= 1 (peek '(1 2 3))))
+(is (= '(2 3) (pop '(1 2 3))))
+(is (= true
+       (try
+         (pop () false)
+         (catch Exception _ true)))
+    "peek는 first와 같지만 pop은 rest와 다르다. rest와 다르게 비어있으면 예외")
+
+;-------------------------------------------------------------------------------
+; vector function
+
+(is (= 3 (peek [1 2 3])))
+(is (= [1 2] (pop [1 2 3])))
+
+(is (= :b (get [:a :b :c] 1)))
+(is (= nil (get [:a :b :c] 3)))
+
+(is (= :b ([:a :b :c] 1))
+    "벡터는 그 자체로 함수이기도 하다. 인덱스를 인자로 받을 수 있다.")
+(is (= true
+       (try
+         ([:a :b :c] 3 false)
+         (catch Exception _ true)))
+    "get과 다르게 인덱스를 넘기면 예외를 던진다")
+
+(is (= [4 5] (subvec [1 2 3 4 5] 3)))
+(is (= [2 3] (subvec [1 2 3 4 5] 1 3)))
+
+;-------------------------------------------------------------------------------
+; map function
+
+(is (= '(:key1 :key2) (sort (keys {:key1 "val1" :key2 "val2"}))))
+(is (= '("val1" "val2") (sort (vals {:key1 "val1" :key2 "val2"}))))
+
+(is (= "val2" (get {:key1 "val1" :key2 "val2"} :key2)))
+(is (= nil (get {:key1 "val1" :key2 "val2"} :key3)))
+
+(is (= "val2" ({:key1 "val1" :key2 "val2"} :key2))
+    "맵은 그 자체로 함수. 키를 인자로 받을 수 있다.")
+(is (= nil ({:key1 "val1" :key2 "val2"} :key3)))
+
+(is (= "val2" (:key2 {:key1 "val1" :key2 "val2"}))
+    "키워드 그 자체로 함수. 맵을 인자로 받을 수 있다.")
+(is (= nil (:key3 {:key1 "val1" :key2 "val2"})))
+
+; 값이 nil일 때, 맵에 있는 key인지 검사하는 방법
+(is (= true (contains? {:key1 nil} :key1)))
+(is (= :not-found (get {:key1 nil} :key2 :not-found)))
+
+(def test-map {:key1 "val1" :key2 "val2"})
+(is (= {:key1 "val1" :key2 "val2" :key3 "val3"}
+       (assoc test-map :key3 "val3")))
+(is (= {:key1 "val1"}
+       (dissoc test-map :key2)))
+(is (= {:key1 "val1" :key2 "val2"}
+       (select-keys test-map [:key1 :key2])))
+(is (= {:key1 "val1" :key2 "val2" :key3 "val3" :key4 "val4"}
+       (merge test-map {:key3 "val3" :key4 "val4"})))
+; TODO: 책과 다름
+; (is (= {:key1 '("val1_1" "val1_2") :key2 '("val2_1" "val2_2")}
+;        (merge-with concat 
+;                    {:key1 "val1_1" :key2 "val2_1"}
+;                    {:key1 "val1_2" :key2 "val2_2"}))
+;     "merge와 비슷하지만 같은 키를 가질 경우 어떻게 조합하는지 정의할 수 있다.")
+
+;-------------------------------------------------------------------------------
+; set function
+
+(def languages #{"java" "c" "d" "clojure"})
+(def letters #{"a" "b" "c" "d" "e"})
+(def beverages #{"java" "chai" "pop"})
+
+(use 'clojure.set)
+(is (= #{"java" "c" "d" "clojure" "chai" "pop"}
+       (union languages beverages)))
+(is (= #{"c" "d" "clojure"}
+       (difference languages beverages)))
+(is (= #{"java"}
+       (intersection languages beverages)))
+(is (= #{"c" "d"}
+       (select #(= 1 (.length %)) languages)))
+
+(def compositions
+  #{{:name "the art of the fugue" :composer "j. s. bach"}
+    {:name "musical offering" :composer "j. s. bach"}
+    {:name "requiem" :composer "giuseppe verdi"}
+    {:name "requiem" :composer "w. a. mozart"}})
+(def composers
+  #{{:composer "j. s. bach" :country "germany"}
+    {:composer "w. a. mozart" :country "austria"}
+    {:composer "giuseppe verdi" :country "italy"}})
+(def nations
+  #{{:nation "germany" :language "german"}
+    {:nation "austria" :language "german"}
+    {:nation "italy" :language "italian"}})
+
+(is (= 
+      #{{:title "the art of the fugue" :composer "j. s. bach"}
+        {:title "musical offering" :composer "j. s. bach"}
+        {:title "requiem" :composer "giuseppe verdi"}
+        {:title "requiem" :composer "w. a. mozart"}}
+      (rename compositions {:name :title})))
+(is (=
+     #{{:name "requiem" :composer "giuseppe verdi"}
+       {:name "requiem" :composer "w. a. mozart"}}
+     (select #(= (:name %) "requiem") compositions)))
+(is (=
+     #{{:name "the art of the fugue"}
+       {:name "musical offering"} 
+       {:name "requiem"}}
+     (project compositions [:name])))
+(is (=
+     #{{:name "the art of the fugue" :composer "j. s. bach" :country "germany"}
+       {:name "musical offering" :composer "j. s. bach" :country "germany"}
+       {:name "requiem" :composer "giuseppe verdi" :country "italy"}
+       {:name "requiem" :composer "w. a. mozart" :country "austria"}}
+     (join compositions composers)))
+(is (=
+     #{{:composer "j. s. bach" :country "germany"
+        :nation "germany" :language "german"}
+       {:composer "w. a. mozart" :country "austria"
+        :nation "austria" :language "german"}
+       {:composer "giuseppe verdi" :country "italy"
+        :nation "italy" :language "italian"}}
+     (join composers nations {:country :nation}))
+    "키가 일치하지 않는 경우 두 관계 사이에 대응하는 키를 맵으로 지정 가능")
+
+(is (=
+     #{{:country "italy"} {:country "austria"}}
+     (project
+       (join
+         (select #(= (:name %) "requiem") compositions)
+         composers)
+       [:country])))
+
