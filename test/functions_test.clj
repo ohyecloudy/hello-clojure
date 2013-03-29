@@ -4,7 +4,7 @@
 ; * clojure.test - ClojureDocs
 ; ** http://clojuredocs.org/clojure_core/clojure.test
 
-(ns hello-clojure.functions-test
+(ns functions-test
   (:use clojure.test))
 
 ;-------------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 ; * clojure.test - ClojureDocs
 ; ** http://clojuredocs.org/clojure_core/clojure.test
 
-(ns hello-clojure.sequences-test
+(ns sequences-test
   (:use clojure.test)
   (:require clojure.string))
 

@@ -4,7 +4,7 @@
 ; * clojure.test - ClojureDocs
 ; ** http://clojuredocs.org/clojure_core/clojure.test
 
-(ns hello-clojure.vars-bindings-namespaces-test
+(ns vars-bindings-namespaces-test
   (:use clojure.test))
 
 ;-------------------------------------------------------------------------------
@@ -12,7 +12,7 @@
 
 (is 
   (= 
-    #'hello-clojure.vars-bindings-namespaces-test/foo
+    #'vars-bindings-namespaces-test/foo
     (def foo 10))
   "def, defn으로 새 객체를 정의할 때, 객체는 var 속에 저장. 
   .../foo라는 var를 생성")

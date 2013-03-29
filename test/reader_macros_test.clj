@@ -6,7 +6,7 @@
 ; * the reader - clojure
 ; ** http://clojure.org/reader
 
-(ns hello-clojure.reader-macros-test
+(ns reader-macros-test
   (:use clojure.test))
 
 ; 리더(reader) - 텍스트를 클로저 자료구조로 변환

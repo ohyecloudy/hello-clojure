@@ -4,7 +4,7 @@
 ; * clojure.test - ClojureDocs
 ; ** http://clojuredocs.org/clojure_core/clojure.test
 
-(ns hello-clojure.functional-programming-test
+(ns functional-programming-test
   (:use clojure.test))
 
 (defn stack-consuming-fibo [n]

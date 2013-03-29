@@ -4,7 +4,7 @@
 ; * clojure.test - ClojureDocs
 ; ** http://clojuredocs.org/clojure_core/clojure.test
 
-(ns hello-clojure.working-with-java-test
+(ns working-with-java-test
   (:use clojure.test))
 
 ; new 함수를 사용해 java 객체 생성

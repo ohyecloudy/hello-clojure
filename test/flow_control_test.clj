@@ -4,7 +4,7 @@
 ; * clojure.test - ClojureDocs
 ; ** http://clojuredocs.org/clojure_core/clojure.test
 
-(ns hello-clojure.flow-control-test
+(ns flow-control-test
   (:use clojure.test))
 
 (defn is-small1? [number]

@@ -4,7 +4,7 @@
 ; * clojure.test - ClojureDocs
 ; ** http://clojuredocs.org/clojure_core/clojure.test
 
-(ns hello-clojure.metadata-test
+(ns metadata-test
   (:use clojure.test))
 
 ; 메타데이터(metadata) - 객체의 논리적인 값과는 무관한 데이터
