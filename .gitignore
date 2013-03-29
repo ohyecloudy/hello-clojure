@@ -7,7 +7,9 @@ pom.xml
 /lib/
 /classes/
 /targets/
+/target/
 .lein-deps-sum
+.lein-repl-history
 
 ### vim ###
 .*.s[a-w][a-z]
