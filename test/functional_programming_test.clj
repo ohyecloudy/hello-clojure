@@ -162,3 +162,129 @@
 ; StackOverflowError
 ; (my-even? 1000000M)
 
+; trampoline은 호출한 결과가 함수가 아닐 때까지
+; recur를 사용해 그 함수를 다시 호출
+; 일반적인 재귀를 위해 사용하면 아무 장점이 없다.
+; 특수한 문제에 한정된 해결책. 상호재귀를 바꿀 방법이 없다면 훌륭한 도구
+(is (= () (trampoline list))
+    "trampoline에 넘긴 함수를 호출한 결과가 함수가 아니라면
+    함수를 직접 호출한 것과 같은 결과")
+(is (= 3 (trampoline + 1 2)))
+
+(defn trampoline-fibo [n]
+  (let [fib (fn fib [f-2 f-1 current]
+              (let [f (+ f-2 f-1)]
+                (if (= n current)
+                  f
+                  #(fib f-1 f (inc current)))))]
+    (cond
+      (= n 0) 0
+      (= n 1) 1
+      :else (fib 0 1 2))))
+
+(is (= 34 (trampoline trampoline-fibo 9)))
+; 큰 값을 넣어도 StackOverflowError가 안 난다.
+; (rem (trampoline trampoline-fibo 1000000M) 1000)
+
+; 차이점은 익명함수 리턴밖에 없다
+(declare my-odd2? my-even2?)
+
+(defn my-odd2? [n]
+  (if (= n 0) 
+    false
+    #(my-even2? (dec n))))
+
+(defn my-even2? [n]
+  (if (= n 0)
+    true
+    #(my-odd2? (dec n))))
+
+; StackOverflowError가 발생하지 않는다.
+; (my-even2? 1000000M)
+
+; wallingford 논문에서 언급하는 replace의 scheme 구현을 클로저로 옮긴 함수
+(declare replace-symbol-old replace-symbol-expression-old)
+
+(defn replace-symbol-old [coll oldsym newsym]
+  (if (empty? coll)
+    ()
+    (cons (replace-symbol-expression-old
+            (first coll) oldsym newsym)
+          (replace-symbol-old
+            (rest coll) oldsym newsym))))
+
+(defn replace-symbol-expression-old [symbol-expr oldsym newsym]
+  (if (symbol? symbol-expr)
+    (if (= symbol-expr oldsym)
+      newsym
+      symbol-expr)
+    (replace-symbol-old symbol-expr oldsym newsym)))
+
+(defn deeply-nested [n]
+  (loop [n n result '(bottom)]
+    (if (= n 0)
+      result
+      (recur (dec n) (list result)))))
+
+(is (= '((((((bottom))))))
+       (deeply-nested 5)))
+
+; StackOverflowError 발생
+; (replace-symbol-old (deeply-nested 10000) 'bottom 'deepest)
+
+(defn- coll-or-scalar [x & _] (if (coll? x) :collection :scalar))
+(defmulti replace-symbol coll-or-scalar)
+
+(defmethod replace-symbol :collection [coll oldsym newsym]
+  (lazy-seq
+    (when (seq coll)
+      (cons (replace-symbol (first coll) oldsym newsym)
+            (replace-symbol (rest coll) oldsym newsym)))))
+(defmethod replace-symbol :scalar [obj oldsym newsym]
+  (if (= obj oldsym) newsym obj))
+
+; StackOverflowError가 발생하지 않는다.
+; (replace-symbol (deeply-nested 10000) 'bottom 'deepest)
+
+; lazy-seq는 재귀를 제거.
+; 스택이 모두 소모되지 않게 막아준다.
+; 재귀 함수나 상호 재귀 함수를 작성한 후에 평가 지연을 이용해 재귀를 제거
+
+; Hofstadter의 female, male 시퀀스를 구현
+(declare m f)
+(defn m [n]
+  (if (zero? n)
+    0
+    (- n (f (m (dec n))))))
+(defn f [n]
+  (if (zero? n)
+    0
+    (- n (m (f (dec n))))))
+
+; (time (m 250))
+; 32333.94994 ms
+
+; memoization을 수행하게 만든다.
+(def m (memoize m))
+(def f (memoize f))
+
+(time (m 250))
+; 4.432179 ms
+(time (m 250))
+; 0.057897 ms 캐시된 값이 만들어졌기 때문
+
+; 메모이제이션을 이용해 재귀 호출을 줄이는 것은 캐시가 생성된 뒤에만 가능
+; 캐시가 생성되기 전 큰 수를 인자로 넘긴다면 캐시가 만들어지지도 못한 상태에서
+; 스택이 날아간다
+; StackOverflowError
+; (m 10000)
+
+; 함수 대신 시퀀스를 만들어 앞쪽부터 차례대로 모든 결과가 캐시되도록
+(def m-seq (map m (iterate inc 0)))
+(def f-seq (map f (iterate inc 0)))
+
+(time (nth m-seq 250))
+; 1.217884 ms
+(time (nth m-seq 10000))
+; 74.87853 ms
+

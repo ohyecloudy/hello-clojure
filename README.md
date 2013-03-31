@@ -12,6 +12,7 @@ clojure 학습 프로젝트
 * [metadata](test/metadata_test.clj)
 * [working with java](test/working_with_java_test.clj)
 * [sequences](test/sequences_test.clj)
+* [functional programming](test/functional_programming_test.clj)
 
 ## reference
 
