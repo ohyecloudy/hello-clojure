@@ -13,6 +13,7 @@ clojure 학습 프로젝트
 * [working with java](test/working_with_java_test.clj)
 * [sequences](test/sequences_test.clj)
 * [functional programming](test/functional_programming_test.clj)
+* [concurrency](test/concurrency_test.clj)
 
 ## reference
 
