@@ -36,8 +36,11 @@
 (is (= '("a" "bcd" "efg") (re-seq #"\w+" "a bcd efg"))
     "#\"\" - 리더 매크로는 정규식을 만든다.")
 
+(def current-track (ref "song1"))
+(is (= "song1" (deref current-track)))
+(is (= "song1" @current-track))
+
 ; TODO
-; deref - @form => (deref form)
 ; 구문 따옴표 - `x
 ; 평가 기호 - ~
 ; 이음 평가 기호 - ~@
