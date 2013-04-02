@@ -86,3 +86,29 @@
      {:result result# :elapsed (- (System/nanoTime) start#)}))
 (bench (str "a" "b"))
 
+; 특수 구문
+; * 기본적인 제어 구조를 제공하는 특수구문 (if, recur)
+; * 자바에 직접 접근할 수 있게 해주는 특수 구문 (new, .)
+; * 이름 및 바인딩을 생성하는 특수 구문 (def, let, binding,...)
+
+; and, or 둘 다 short-circuit evaluation
+; http://ohyecloudy.com/pnotes/archives/542
+(is (= nil (and 1 0 nil false)))
+(is (= 1 (or 1 0 nil false)))
+
+; 인자를 전혀 평가하지 않는다. 종종 파일 마지막에 API 사용법을 보이는데 사용
+; comment 내에서 본문을 강조하기 위해 이런 스타일을 사용
+(comment
+
+(load-file "src/inspector.clj")
+(refer 'inspector)
+(inspect-tree {:a 1}...)
+
+)
+
+(defmacro defstruct-macro
+  [name & keys]
+  `(def ~name (create-struct ~@keys)))
+; 간단하지만 함수로 만들 수 없다. def가 특수 구문이기 때문에.
+; def는 매크로 타임에 생성돼야만 하고 런타임에 동적으로 def를 호출할 수 없다.
+

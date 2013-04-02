@@ -14,6 +14,7 @@ clojure 학습 프로젝트
 * [sequences](test/sequences_test.clj)
 * [functional programming](test/functional_programming_test.clj)
 * [concurrency](test/concurrency_test.clj)
+* [macros](test/macros_test.clj)
 
 ## reference
 
