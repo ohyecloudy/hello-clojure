@@ -40,8 +40,14 @@
 (is (= "song1" (deref current-track)))
 (is (= "song1" @current-track))
 
-; TODO
-; 구문 따옴표 - `x
-; 평가 기호 - ~
-; 이음 평가 기호 - ~@
+(defmacro chain 
+  ([x form] `(. ~x ~form))
+  ([x form & more] `(chain (. ~x ~form) ~@more)))
+(is (= '(. (. arm getHand) getFinger)
+       (macroexpand '(chain arm getHand getFinger)))
+    "
+    ` 구문 따옴표(syntax quote)는 일반적인 따옴표와 비슷하지만
+    리스트 안에서 ~ 평가 기호(unquote)를 사용해 따옴표 효과를 없앨 수 있다.
+    ~@ 이음 평가 기호(splicing unquote)를 사용하지 않으면
+    more 또한 리스트이므로 괄호를 포함하게 된다.")
 
