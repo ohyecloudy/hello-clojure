@@ -92,7 +92,6 @@
        (map #(.toUpperCase %) ["a" "b"]))
     "익명 함수로도 가능. 이 방식을 선호한다고 한다.")
 
-; TODO: 책과 다르다. Integer가 아니라 Long
 (is (= true (instance? Long 10)) "어떤 클래스의 인스턴스인지 검사")
 (is (= true (instance? Comparable 10)))
 (is (= false (instance? String 10)))

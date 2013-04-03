@@ -114,7 +114,6 @@
        (by-pairs [:h :t :t :h :h :h]))
     "구현한 by-pairs는 (partition 2 1 coll)과 같다")
 
-; TODO: 책과 다름. 1.3 이후에는 defvar 대신에 def를 사용
 (def count-if (comp count filter))
 (is (= 3 (count-if odd? [1 2 3 4 5])))
 

@@ -99,7 +99,6 @@
        (interpose "," ["a" "b" "c"])))
 (is (= "a,b,c"
        (apply str (interpose "," ["a" "b" "c"]))))
-; TODO: 책에 나온 str-join 대신 join 사용
 (is (= "a,b,c"
        (clojure.string/join \, ["a" "b" "c"])))
 
@@ -312,12 +311,6 @@
        (select-keys test-map [:key1 :key2])))
 (is (= {:key1 "val1" :key2 "val2" :key3 "val3" :key4 "val4"}
        (merge test-map {:key3 "val3" :key4 "val4"})))
-; TODO: 책과 다름
-; (is (= {:key1 '("val1_1" "val1_2") :key2 '("val2_1" "val2_2")}
-;        (merge-with concat 
-;                    {:key1 "val1_1" :key2 "val2_1"}
-;                    {:key1 "val1_2" :key2 "val2_2"}))
-;     "merge와 비슷하지만 같은 키를 가질 경우 어떻게 조합하는지 정의할 수 있다.")
 
 ;-------------------------------------------------------------------------------
 ; set function

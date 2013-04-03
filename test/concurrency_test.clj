@@ -97,7 +97,6 @@
 ; 숫자가 아닌 값을 넘겼지만 바로 에러가 나지 않는다.
 (send counter (fn [_] "boo"))
 
-; TODO: 책과 다르게 deref를 하는 순간 예외를 던지지 않는다.
 (is (= 0 @counter))
 (is (not (= nil (agent-errors counter)))
     "에러가 발생했다.")
@@ -130,7 +129,6 @@
 ; 바인딩 foo는 모든 스레드에 의해 공유
 (.start (Thread. (fn [] (is (= 10 foo)))))
 
-; TODO: 책과 다르다. 1.3 부터는 명시적으로 dynamic 선언을 해줘야 한다.
 (def ^:dynamic foo 10)
 (binding [foo 42] foo)
 

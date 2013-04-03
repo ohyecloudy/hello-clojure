@@ -47,7 +47,6 @@
 ;-------------------------------------------------------------------------------
 ; anonymous functions
 
-; TODO: 책에는 re-split을 사용했는데, 그냥 split 사용
 (use '[clojure.string :only (split)])
 (is 
   (= 

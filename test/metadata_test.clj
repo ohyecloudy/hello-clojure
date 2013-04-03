@@ -34,7 +34,6 @@
     "assoc 함수는 기존 맵에 새 키/값 쌍을 추가한 맵을 만든다.
     이때, 기존 맵 메타데이터를 그대로 가져온다")
 
-; TODO - 책과 다르다. 책에서 설명하는 ^는 사라지고 #^가 ^ 역할
 ; TODO - 동작이 정확히 이해가 안 된다.
 (defn ^{:tag String} shout [^{:tag String} s] (.toUpperCase s))
 (is (= java.lang.String
