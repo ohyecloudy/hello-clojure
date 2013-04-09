@@ -113,11 +113,20 @@
 ; def는 매크로 타임에 생성돼야만 하고 런타임에 동적으로 def를 호출할 수 없다.
 
 ;-------------------------------------------------------------------------------
+; -> thread-first macro
+; ->> thread-last macro
 
 (= (last (sort (rest (reverse [2 5 4 1 3 6]))))
-   (-> [2 5 4 1 3 6] reverse rest sort last)
-   "-> 매크로는 왼쪽에서 오른쪽으로 적용")
+   (-> [2 5 4 1 3 6] reverse rest sort last))
+
+(= (first (.split (.replace (.toUpperCase "a b c d")
+                            "A"
+                            "X")
+                  " "))
+   (-> "a b c d" .toUpperCase (.replace "A" "X") (.split " ") first)
+   "form에 두번째 아이템으로(함수 첫번째 인자)에 삽입된다는 게 ->>와 다르다.")
 
 (= (reduce + (map inc (take 3 (drop 2 [2 5 4 1 3 6]))))
-   (->> [2 5 4 1 3 6] (drop 2) (take 3) (map inc) (reduce +)))
+   (->> [2 5 4 1 3 6] (drop 2) (take 3) (map inc) (reduce +))
+   "form에 마지막 아이템으로 삽입된다.")
 
