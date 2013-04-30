@@ -15,7 +15,7 @@ clojure 학습 프로젝트
 * [functional programming](test/functional_programming_test.clj)
 * [concurrency](test/concurrency_test.clj)
 * [macros](test/macros_test.clj)
-* [multimethods](test/mutimethods_test.clj)
+* [multimethods](test/multimethods_test.clj)
 
 ## reference
 
